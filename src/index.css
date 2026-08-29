@@ -1,0 +1,304 @@
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  /* Dark Mode (Default) */
+  --color-void: #050A14;
+  --color-void-rgb: 5 10 20;
+
+  --color-panel: #0B1524;
+  --color-panel-rgb: 11 21 36;
+
+  --color-raised: #0F1C30;
+  --color-raised-rgb: 15 28 48;
+
+  --color-steel: #1C2C42;
+  --color-steel-rgb: 28 44 66;
+
+  --color-signal-blue: #2F6FED;
+  --color-signal-blue-rgb: 47 111 237;
+
+  --color-signal-bright: #4C8DFF;
+  --color-signal-bright-rgb: 76 141 255;
+
+  --color-fog-white: #E8EDF5;
+  --color-fog-white-rgb: 232 237 245;
+
+  --color-instrument-grey: #8A97AB;
+  --color-instrument-grey-rgb: 138 151 171;
+
+  --color-clear-green: #3DDC84;
+  --color-clear-green-rgb: 61 220 132;
+
+  --color-caution-amber: #F0B429;
+  --color-caution-amber-rgb: 240 180 41;
+
+  --color-alert-red: #F0473F;
+  --color-alert-red-rgb: 240 71 63;
+}
+
+[data-theme="light"] {
+  /* Light Mode (per reference visual style) */
+  --color-void: #F7F9FC;
+  --color-void-rgb: 247 249 252;
+
+  --color-panel: #FFFFFF;
+  --color-panel-rgb: 255 255 255;
+
+  --color-raised: #F1F5F9;
+  --color-raised-rgb: 241 245 249;
+
+  --color-steel: #E2E8F0;
+  --color-steel-rgb: 226 232 240;
+
+  --color-signal-blue: #2F6FED;
+  --color-signal-blue-rgb: 47 111 237;
+
+  --color-signal-bright: #2563EB;
+  --color-signal-bright-rgb: 37 99 235;
+
+  --color-fog-white: #1A2332;
+  --color-fog-white-rgb: 26 35 50;
+
+  --color-instrument-grey: #64748B;
+  --color-instrument-grey-rgb: 100 116 139;
+
+  --color-clear-green: #16A34A;
+  --color-clear-green-rgb: 22 163 74;
+
+  --color-caution-amber: #D97706;
+  --color-caution-amber-rgb: 217 119 6;
+
+  --color-alert-red: #DC2626;
+  --color-alert-red-rgb: 220 38 38;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-void);
+    color: var(--color-fog-white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    transition: background-color 250ms ease, color 250ms ease;
+  }
+}
+
+/* Light mode panel subtle card shadow */
+[data-theme="light"] .bg-panel {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Smooth transition for theme switches */
+header, aside, main, div, input, select, button {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+.leaflet-tile-pane,
+.leaflet-marker-pane,
+.leaflet-pane,
+.custom-camera-marker,
+.animate-ping,
+.animate-spin,
+.animate-pulse {
+  transition: none !important;
+}
+
+/* Custom scrollbar for data-dense panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-steel);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-signal-blue);
+}
+
+/* Tabular figures utility for data alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glassmorphism card for login */
+.glass-panel {
+  background: rgba(9, 16, 30, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid #1C2C42;
+}
+
+/* Live feed pulse effect */
+@keyframes livePulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+.animate-live-pulse {
+  animation: livePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* --- LEAFLET THEME RESTYLING --- */
+.leaflet-container {
+  background-color: var(--color-void) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Dark CSS Filter applied ONLY to Leaflet Tile Pane in Dark Mode */
+:root:not([data-theme="light"]) .leaflet-tile-pane,
+[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+
+/* In Light Mode, plain unfiltered OpenStreetMap tiles */
+[data-theme="light"] .leaflet-tile-pane {
+  filter: none !important;
+}
+
+/* Custom Leaflet zoom controls */
+.leaflet-control-zoom {
+  border: 1px solid var(--color-steel) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: var(--color-panel) !important;
+  color: var(--color-fog-white) !important;
+  border-bottom: 1px solid var(--color-steel) !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 14px !important;
+  transition: all 0.15s ease !important;
+}
+.leaflet-control-zoom-out {
+  border-bottom: none !important;
+}
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: var(--color-signal-blue) !important;
+  color: #FFFFFF !important;
+}
+
+/* Custom Leaflet popups */
+.leaflet-popup-content-wrapper {
+  background-color: var(--color-panel) !important;
+  border: 1px solid var(--color-steel) !important;
+  color: var(--color-fog-white) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2) !important;
+  padding: 2px !important;
+}
+.leaflet-popup-tip {
+  background-color: var(--color-panel) !important;
+  border: 1px solid var(--color-steel) !important;
+}
+.leaflet-popup-content {
+  margin: 10px 12px !important;
+  line-height: 1.4 !important;
+}
+
+/* Leaflet Attribution */
+.leaflet-control-attribution {
+  background: var(--color-panel) !important;
+  opacity: 0.85;
+  color: var(--color-instrument-grey) !important;
+  font-size: 10.5px !important;
+  border: 1px solid var(--color-steel) !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+}
+.leaflet-control-attribution a {
+  color: var(--color-signal-bright) !important;
+  text-decoration: none !important;
+}
+
+/* Custom Leaflet DivIcon Camera Markers */
+.custom-camera-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.camera-pin-inner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 2px solid var(--color-panel);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease;
+}
+.camera-pin-inner:hover {
+  transform: scale(1.15);
+}
+.camera-pin-inner.green {
+  background-color: var(--color-clear-green);
+  color: #FFFFFF;
+}
+.camera-pin-inner.amber {
+  background-color: var(--color-caution-amber);
+  color: #FFFFFF;
+}
+.camera-pin-inner.red {
+  background-color: var(--color-alert-red);
+  color: #FFFFFF;
+}
+.camera-pin-inner.blue {
+  background-color: var(--color-signal-blue);
+  color: #FFFFFF;
+}
+
+
+/* ============================================================ */
+/* RADAR SWEEP ANIMATION — used only on app load + ANPR search  */
+/* ============================================================ */
+
+/* Concentric pulsing ring: scale 0.3→1, opacity 0.8→0 */
+@keyframes radarRing {
+  0%   { transform: scale(0.3); opacity: 0.8; }
+  100% { transform: scale(1);   opacity: 0;   }
+}
+
+/* Sweep line rotation: 0→360° over 2s */
+@keyframes radarSweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Blinking detection dots */
+@keyframes radarDotBlink {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.2; transform: scale(0.6); }
+}
+
+/* Full-page loader fade out */
+@keyframes appLoaderFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; pointer-events: none; }
+}
+
+/* Animated ellipsis for status text */
+@keyframes ellipsis {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: '.'; }
+}
+.radar-ellipsis::after {
+  content: '.';
+  animation: ellipsis 1.5s steps(1, end) infinite;
+}
